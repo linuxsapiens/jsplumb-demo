@@ -36,3 +36,7 @@
   color: #969696;
 }
 
+.endPoint-hover {
+  stroke: #009ace !important;
+  fill: #009ace !important;
+}
