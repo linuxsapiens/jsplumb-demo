@@ -1,29 +1,46 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { FlowEditor } from "./FlowEditor";
+import * as jsPlumbBrowserUI from "@jsplumb/browser-ui";
 import { nodes } from "./nodes";
 
-function App() {
-  const refContainer = useRef(null);
+const manageAll = (instance, elements) => {
+  elements.forEach((node) => {
+    instance.manage(node);
+  });
+};
 
-  const [refNodes, setRefNodes] = useState(null);
+function App() {
+  const jspRef = useRef(null);
+
+  const [elements, setElements] = useState([]);
 
   useEffect(() => {
-    if (nodes && nodes.length > 0 && refNodes === null) {
-      console.log(nodes);
-      const myNodes = nodes.map((node) => {
-        return { ...node, ref: document.getElementById(node.id) };
+    if (!jspRef.current) {
+      const element = document.getElementById("jsplumb-container");
+      const instance = jsPlumbBrowserUI.newInstance({
+        container: element,
       });
-      setRefNodes(myNodes);
+      jspRef.current = instance;
     }
-  }, [nodes]);
+
+    const others = [];
+    nodes.forEach((node) => {
+      others.push(document.getElementById(node.id));
+    });
+    setElements(others);
+  }, []);
+
+  useEffect(() => {
+    if (jspRef.current) {
+      manageAll(jspRef.current, elements);
+    }
+  }, [elements]);
 
   return (
     <div className="App">
       <header className="App-header">
         <div
           id="jsplumb-container"
-          ref={refContainer}
           style={{
             width: "1000px",
             height: "600px",
@@ -31,24 +48,16 @@ function App() {
             border: "1px solid black",
           }}
         >
-          {nodes &&
-            Array.isArray(nodes) &&
-            nodes.map((node, index) => (
-              <div
-                id={node.id}
-                key={node.id}
-                className="node"
-                style={{ left: (node.x + 100) * index, top: node.y }}
-                x={node.x}
-              >
-                {node.title}
-              </div>
-            ))}
-          <FlowEditor
-            nodes={refNodes}
-            containerId="jsplumb-container"
-            containerRef={refContainer}
-          />
+          {nodes.map((node) => (
+            <div
+              key={node.id}
+              id={node.id}
+              className="node"
+              style={{ left: node.x, top: node.y }}
+            >
+              {node.title}
+            </div>
+          ))}
         </div>
       </header>
     </div>
