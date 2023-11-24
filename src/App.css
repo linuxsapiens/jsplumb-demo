@@ -16,7 +16,33 @@
 .App-link {
   color: #61dafb;
 }
+/*
+.window {
+  z-index: 20;
+}
 
+.jtk-connector {
+  z-index: 4;
+}
+
+.jtk-endpoint {
+  z-index: 5;
+}
+
+.jtk-overlay {
+  z-index: 6;
+}
+*/
+/*
+.jtk-drag-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+*/
 .node {
   cursor: pointer;
   position: absolute;
@@ -29,6 +55,7 @@
   text-align: center;
   line-height: 50px;
   font-size: medium;
+  box-sizing: border-box;
 }
 
 .myLabel {

@@ -1,58 +1,29 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
-import * as jsPlumbBrowserUI from "@jsplumb/browser-ui";
+import { FlowEditor } from "./FlowEditor";
+import { nodes } from "./nodes";
 
 function App() {
+  const refContainer = useRef(null);
+
+  const [refNodes, setRefNodes] = useState(null);
+
   useEffect(() => {
-    const element = document.getElementById("jsplumb-container");
-    const instance = jsPlumbBrowserUI.newInstance({
-      container: element,
-    });
-    const start = document.getElementById("start");
-    const node1 = document.getElementById("node1");
-    const node2 = document.getElementById("node2");
-    const node3 = document.getElementById("node3");
-
-    instance.manageAll([start, node1, node2, node3]);
-
-    instance.connect({
-      source: start,
-      target: node1,
-      anchors: ["Right", "Left"],
-      connector: {
-        type: "Bezier",
-        options: {
-          curviness: 50,
-        },
-      },
-    });
-
-    instance.connect({
-      source: node1,
-      target: node2,
-      anchors: ["Right", "Left"],
-      connector: {
-        type: "Flowchart",
-        options: {
-          stub: [10, 10],
-          // gap: 10,
-          cornerRadius: 10,
-        },
-      },
-      /*
-      overlays:[
-        { type:"Label", options:{label:"Connection 2", location: 0.5, cssClass:"myLabel"}},
-        { type:"Arrow", options:{location:1}},
-      ]
-      */
-    });
-  }, []);
+    if (nodes && nodes.length > 0 && refNodes === null) {
+      console.log(nodes);
+      const myNodes = nodes.map((node) => {
+        return { ...node, ref: document.getElementById(node.id) };
+      });
+      setRefNodes(myNodes);
+    }
+  }, [nodes]);
 
   return (
     <div className="App">
       <header className="App-header">
         <div
           id="jsplumb-container"
+          ref={refContainer}
           style={{
             width: "1000px",
             height: "600px",
@@ -60,18 +31,24 @@ function App() {
             border: "1px solid black",
           }}
         >
-          <div id="start" className="node" style={{ left: 100, top: 200 }}>
-            Inicio
-          </div>
-          <div id="node1" className="node" style={{ left: 300, top: 300 }}>
-            Fase 1
-          </div>
-          <div id="node2" className="node" style={{ left: 600, top: 400 }}>
-            Fase 2
-          </div>
-          <div id="node3" className="node" style={{ left: 900, top: 500 }}>
-            Fase 3
-          </div>
+          {nodes &&
+            Array.isArray(nodes) &&
+            nodes.map((node, index) => (
+              <div
+                id={node.id}
+                key={node.id}
+                className="node"
+                style={{ left: (node.x + 100) * index, top: node.y }}
+                x={node.x}
+              >
+                {node.title}
+              </div>
+            ))}
+          <FlowEditor
+            nodes={refNodes}
+            containerId="jsplumb-container"
+            containerRef={refContainer}
+          />
         </div>
       </header>
     </div>
