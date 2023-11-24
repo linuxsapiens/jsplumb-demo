@@ -11,6 +11,7 @@ function App() {
     const start = document.getElementById("start");
     const node1 = document.getElementById("node1");
     const node2 = document.getElementById("node2");
+    const node3 = document.getElementById("node3");
 
     instance.manageAll([start, node1, node2, node3]);
 
