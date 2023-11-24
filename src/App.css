@@ -16,33 +16,18 @@
 .App-link {
   color: #61dafb;
 }
-/*
-.window {
-  z-index: 20;
+
+.jsplumb-container {
+  --dot-bg: #f1f1f1;
+    --dot-color: #696b6b;
+    --dot-size: 2px;
+    --dot-space: 20px;
+    background:
+      linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+      linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+      var(--dot-color);
 }
 
-.jtk-connector {
-  z-index: 4;
-}
-
-.jtk-endpoint {
-  z-index: 5;
-}
-
-.jtk-overlay {
-  z-index: 6;
-}
-*/
-/*
-.jtk-drag-select {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-*/
 .node {
   cursor: pointer;
   position: absolute;

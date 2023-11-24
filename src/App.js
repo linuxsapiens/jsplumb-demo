@@ -9,6 +9,19 @@ const manageAll = (instance, elements) => {
   });
 };
 
+const connectAll = (instance, elements) => {
+  elements.forEach((node, index) => {
+    if (index < elements.length - 1) {
+      instance.connect({
+        source: node,
+        target: elements[index + 1],
+        anchors: ["Right", "Left"],
+        connector: { type: "Flowchart", options: { cornerRadius: 10 } },
+      });
+    }
+  });
+};
+
 function App() {
   const jspRef = useRef(null);
 
@@ -33,6 +46,7 @@ function App() {
   useEffect(() => {
     if (jspRef.current) {
       manageAll(jspRef.current, elements);
+      connectAll(jspRef.current, elements);
     }
   }, [elements]);
 
@@ -41,6 +55,7 @@ function App() {
       <header className="App-header">
         <div
           id="jsplumb-container"
+          className="jsplumb-container"
           style={{
             width: "1000px",
             height: "600px",
