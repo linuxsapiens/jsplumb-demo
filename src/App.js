@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import * as jsPlumbBrowserUI from "@jsplumb/browser-ui";
 import { nodes } from "./nodes";
+import "@jsplumb/browser-ui/css/jsplumbtoolkit.css";
 
 const manageAll = (instance, elements) => {
   elements.forEach((node) => {
@@ -22,6 +23,22 @@ const connectAll = (instance, elements) => {
   });
 };
 
+const addNode = (instance, element) => {
+  instance.manage(element);
+  instance.addEndpoint(element, {
+    source: true,
+    anchors: "Right",
+    endpoint: "Dot",
+    connector: { type: "Flowchart", options: { cornerRadius: 10 } },
+  });
+  instance.addEndpoint(element, {
+    target: true,
+    anchors: "Left",
+    endpoint: "Dot",
+    connector: { type: "Flowchart", options: { cornerRadius: 10 } },
+  });
+};
+
 function App() {
   const jspRef = useRef(null);
 
@@ -32,6 +49,12 @@ function App() {
       const element = document.getElementById("jsplumb-container");
       const instance = jsPlumbBrowserUI.newInstance({
         container: element,
+        dragOptions: {
+          grid: { w: 20, h: 20 },
+          containment: "parent",
+          containmentPadding: 100,
+          // constrainFunction: (el, pos) => {},
+        },
       });
       jspRef.current = instance;
     }
@@ -50,9 +73,39 @@ function App() {
     }
   }, [elements]);
 
+  const addElement = (type) => {
+    const id = type + Math.random();
+    const container = document.getElementById("jsplumb-container");
+    const node = container.appendChild(
+      document.createElement("div", {
+        key: id,
+        id: id,
+        style: { left: 100, top: 100, width: 100, height: 100 },
+      })
+    );
+    node.className = "node";
+    node.appendChild(document.createTextNode(id));
+    addNode(jspRef.current, node);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
+        <h1>Flow Editor</h1>
+      </header>
+      <div
+        className="App-body"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "20px",
+          color: "white",
+        }}
+      >
+        <div style={{ display: "flex-column", marginRight: "20px" }}>
+          <button onClick={() => addElement("start")}>Add</button>
+        </div>
         <div
           id="jsplumb-container"
           className="jsplumb-container"
@@ -74,7 +127,7 @@ function App() {
             </div>
           ))}
         </div>
-      </header>
+      </div>
     </div>
   );
 }
